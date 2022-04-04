@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title></title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/100/three.js"></script>
@@ -11,6 +12,7 @@
     }
   </style>
 </head>
+
 <body>
   <script>
     let cube;
@@ -21,7 +23,7 @@
     scene.add(light);
 
     const camera = new THREE.PerspectiveCamera(75,
-      window.innerWidth/window.innerHeight, 0.1, 1000);
+      window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer();
@@ -29,24 +31,24 @@
     document.body.appendChild(renderer.domElement);
 
     const objLoader = new THREE.OBJLoader();
-    objLoader.setPath('/blender-files/');
+    objLoader.setPath('./blender-files/');
 
     const mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath('/blender-files/');
+    mtlLoader.setPath('./blender-files/');
 
     new Promise((resolve) => {
       mtlLoader.load('b2-pack.mtl', (materials) => {
         resolve(materials);
       });
     })
-    .then((materials) => {
-      materials.preload();
-      objLoader.setMaterials(materials);
-      objLoader.load('b2-pack.obj', (object) => {
-        cube = object;
-        scene.add(object);
+      .then((materials) => {
+        materials.preload();
+        objLoader.setMaterials(materials);
+        objLoader.load('b2-pack.obj', (object) => {
+          cube = object;
+          scene.add(object);
+        });
       });
-    });
 
     function render() {
       if (cube) {
@@ -61,5 +63,5 @@
     render();
   </script>
 </body>
-</html>
 
+</html>
