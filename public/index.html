@@ -9,6 +9,8 @@
   <style type="text/css">
     body {
       margin: 0px;
+      height: 100%;
+      width: 50%;
     }
   </style>
 </head>
@@ -49,13 +51,32 @@
           scene.add(object);
         });
       });
-
+x_angles = [0,1,2,3,4];
+y_angles = [0,1,2,3,4];
+var imgArray = new Array();
+i = 0, j=0, ind= 0;
     function render() {
-      if (cube) {
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-      }
+      if (cube && i<=4) {
+        cube.rotation.x += 1;
+        console.log(i)
 
+        //Image Snapshot
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        ind++;
+        i++;
+        
+      }
+      else if (cube && j<=4) {
+        cube.rotation.y += 1;
+        console.log(j)
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        ind++;
+        j++;
+      }
       requestAnimationFrame(render);
       renderer.render(scene, camera);
     }
