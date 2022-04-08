@@ -6,17 +6,60 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/100/three.js"></script>
   <script src="./threejs-loader/OBJLoader.js"></script>
   <script src="./threejs-loader/MTLLoader.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <style type="text/css">
     body {
+      padding: 0px;
       margin: 0px;
-      height: 100%;
-      width: 50%;
+      height: 90%;
+      width: 100%;
     }
-  </style>
+    .container {
+        position: relative;
+        background-color: red;
+        width: 49%;
+        float: right;
+
+        display: grid;
+        grid-template-columns: 100px 100px 100px;
+        grid-template-rows: auto;
+        box-sizing: border-box;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+      
+      /* Make the image responsive */
+      .container img {
+        width: 80px;
+        height: 80px;
+        margin: 8px;
+        
+      }
+      
+      /* Style the button and place it in the middle of the container/image */
+      .container .img .btn {
+        transform: translate(-60%, -60%);
+        -ms-transform: translate(-60%, -60%);
+        background-color: #555;
+        color: white;
+        cursor: pointer;
+      }
+      
+      .container .btn:hover {
+        background-color: dimgray;
+      }
+</style>
+
+<div class="container"></div>
+
 </head>
 
 <body>
   <script>
+    /*$('.new_img .new_btn').on('click',function(){
+      $(this).parent('.new_img').remove();
+    });*/
+
     let cube;
     const scene = new THREE.Scene();
 
@@ -29,7 +72,7 @@
     camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth/2, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
     const objLoader = new THREE.OBJLoader();
@@ -79,10 +122,41 @@ i = 0, j=0, ind= 0;
       }
       requestAnimationFrame(render);
       renderer.render(scene, camera);
-    }
+    
+    let all_container = document.querySelector('.container');
+    let new_div = document.createElement("div");
+    let new_img = document.createElement("img");
+    let new_btn= document.createElement("button");
+    
+    new_img.src = imgArray[0].src;
+    
+    new_btn.innerHTML = "Delete";
+    new_img.classList.add("img")
+    new_btn.classList.add("btn")
+    
+    new_div.appendChild(new_img);
+    new_div.appendChild(new_btn);
+    all_container.appendChild(new_div); 
 
+    for(var i =0; i<imgArray.length ;i++)
+      {   
+          if(imgArray[i].src == new_img.src)
+          {
+            if(i == imgArray.length){
+              new_img.src = imgArray[i].src;
+              break;
+            }
+            new_img.src = imgArray[i+1].src;
+              //break;
+          } 
+          new_div.appendChild(new_img);
+          new_div.appendChild(new_btn);
+          all_container.appendChild(new_div); 
+      }
+    }
     render();
   </script>
+
 </body>
 
 </html>

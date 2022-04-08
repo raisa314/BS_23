@@ -1,0 +1,28 @@
+    function showImage(){
+      for(var i = 0; i < imgArray.length;i++){
+            if(i === imgArray.length){
+                document.getElementById(imgArray[0].src)
+                break;
+              }
+            document.getElementById(imgArray[i+1].src)
+            break;
+        }
+}
+
+
+imgArray.forEach(function(image) {    // for each link l in ArrayOfImages
+      var img = document.createElement('img'); // create an img element
+      img.src = image;                         // set its src to the link l
+      img.height = "45";
+      img.width = "50";
+      document.body.appendChild(img);          // append it to the body 
+    });
+
+imgArray.forEach()    // for each link l in imgArray
+      var img = document.createElement('img'); // create an img element
+      img.src = imgArray[].src;                         // set its src to the link l
+      img.height = "45";
+      img.width = "50";
+      document.body.appendChild(img);          // append it to the body 
+    );
+
