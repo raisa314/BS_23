@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -6,19 +7,54 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/100/three.js"></script>
   <script src="./threejs-loader/OBJLoader.js"></script>
   <script src="./threejs-loader/MTLLoader.js"></script>
-  <style type="text/css">
-    body {
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.9.1/jszip.js"></script>
+    <style type="text/css">
+     body {
       margin: 0px;
-      height: 100%;
-      width: 50%;
+    
     }
+   
   </style>
+   <div id="splash">
+    <img src="./rpb1.jpg" alt="demo image" id="mainImage">
+
+    </div> 
+    <div id="controls">
+        <button id="previousbtn" onclick="previousImage()">Previous Image</button>
+        <button id="nextbtn" onclick="nextImage()"> Next Image</button>
+        <button id="downbtn" onclick="downloadImage()"> Download Image</button>
+    </div>
+
+    <style>
+      img{
+        width: 49%;
+    height: 100%;
+    float: right;
+      }
+      #previousbtn{
+          margin-right: 75px;;
+      }
+      #nextbtn{
+          margin-left: 75px;
+      }
+      #downbtn{
+          margin-left: 75px;
+      }
+    </style>
 </head>
 
 <body>
   <script>
+    //  import JSZip from 'jszip';
+// import FileSaver from 'file-saver';
+//const zip =require("jszip")
+const zip = new JSZip();
+
     let cube;
     const scene = new THREE.Scene();
+  //  const zip = THREE.zip();
 
     const light = new THREE.DirectionalLight('#ffffff', 0.9);
     light.position.set(-20, 0, 100);
@@ -29,7 +65,7 @@
     camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth/2, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
     const objLoader = new THREE.OBJLoader();
@@ -51,11 +87,16 @@
           scene.add(object);
         });
       });
-x_angles = [0,1,2,3,4];
-y_angles = [0,1,2,3,4];
-var imgArray = new Array();
-i = 0, j=0, ind= 0;
+    x_angles = [0,1,1,1,1];
+    y_angles = [0,1,1,1,1]; 
+    var imgArray = new Array();
+    i = 1, j=1, ind= 1, ishow=0;;
+
+    imgArray[0] = new Image();
+imgArray[0].src = './rpb1.jpg';
+
     function render() {
+
       if (cube && i<=4) {
         cube.rotation.x += 1;
         console.log(i)
@@ -64,6 +105,9 @@ i = 0, j=0, ind= 0;
         imgArray[ind] = new Image();
         renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
+        //zip.file(imgArray[ind].name, imgArray[ind].src);
+         console.log(" this \n", imgArray[ind].src)
+        
         ind++;
         i++;
         
@@ -74,13 +118,113 @@ i = 0, j=0, ind= 0;
         imgArray[ind] = new Image();
         renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
+        // zip.file(imgArray[ind].name, imgArray[ind].src);
+        
         ind++;
         j++;
       }
+
+    
       requestAnimationFrame(render);
       renderer.render(scene, camera);
     }
 
+    function nextImage(){
+    var img = document.getElementById("mainImage");
+    console.log(imgArray.length)
+   
+            document.getElementById("mainImage").src = imgArray[ishow+1].src;
+      ishow++;
+}
+function previousImage(){
+    var img = document.getElementById("mainImage");
+    document.getElementById("mainImage").src = imgArray[ishow-1].src;
+      ishow--;
+}
+  
+function downloadImage(){
+    var a = document.createElement("a")
+    document.body.appendChild(a);
+    for(var i = 1; i < imgArray.length;i++){
+    //  document.body.appendChild(a);
+      a.href= imgArray[i].src;
+      a.download=`image(${i}).png`
+     zip.file(`mymage(${i}).png`, dataURLtoFile(imgArray[i].src,`mymage(${i}).png`), {binary:true});
+     // a.click()
+     //zip.file(`mymage(${i}).png`, imgArray[i].src,{binary:true});
+      //document.body.removeChild(a);
+    }
+
+              
+              try {
+         zip.generateAsync({ type: 'blob' }).then(function (content) {
+          //a.click()
+           saveAs(content, 'download.zip');
+         //  FileSaver.saveAs(content, 'fileName.zip')
+       });
+
+        } catch (error) {
+        // TODO
+        throw new Error(error );
+        }
+
+
+
+}
+function dataURLtoFile(dataurl, filename) {
+ 
+ var arr = dataurl.split(','),
+     mime = arr[0].match(/:(.*?);/)[1],
+     bstr = atob(arr[1]), 
+     n = bstr.length, 
+     u8arr = new Uint8Array(n);
+     
+ while(n--){
+     u8arr[n] = bstr.charCodeAt(n);
+ }
+ 
+ return new File([u8arr], filename, {type:mime});
+}
+function downtest(){
+
+  var zip = new JSZip();
+  var img = zip.folder("images");
+
+  for (var i=0; i<imgArray.length; i++) {
+    //img.file("image("+i+").png", imgArray[i].src); 
+   JSZipUtils.getBinaryContent(imgArray[i], async function (err, imgArray) {
+        if (err) {
+          throw err; // or handle the error
+        }
+        zip.file(`image(${i}).png`, imgArray[i].src, { binary: true });
+      
+    })
+  }
+        //count++;
+      //  if (count == urls.length) {
+          var zipFile =  zip.generateAsync({ type: 'blob' });
+          saveAs(zipFile, zipFilename);
+      //  }
+  //    });
+}
+
+
+function createArchive(){
+  // Use jszip
+  var zip = new JSZip();
+  var img = zip.folder("images");
+
+  for (var i=0; i<imgArray.length; i++) {
+    img.file("image("+i+").png", imgArray[i].src); 
+  }
+      zip.generateAsync({type:"blob"}).then(function(file){
+        saveAs(file, "images.zip");
+
+      })
+
+}
+  
+    
     render();
   </script>
 </body>
