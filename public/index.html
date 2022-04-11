@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -7,54 +6,99 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/100/three.js"></script>
   <script src="./threejs-loader/OBJLoader.js"></script>
   <script src="./threejs-loader/MTLLoader.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.9.1/jszip.js"></script>
-    <style type="text/css">
-     body {
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+  
+
+  <style type="text/css">
+    body {
+      padding: 0px;
       margin: 0px;
-    
+      height: 90%;
+      width: 100%;
     }
-   
-  </style>
-   <div id="splash">
-    <img src="./rpb1.jpg" alt="demo image" id="mainImage">
-
-    </div> 
-    <div id="controls">
-        <button id="previousbtn" onclick="previousImage()">Previous Image</button>
-        <button id="nextbtn" onclick="nextImage()"> Next Image</button>
-        <button id="downbtn" onclick="downloadImage()"> Download Image</button>
-    </div>
-
-    <style>
-      img{
+    .container {
+        position: relative;
+        background-color: dimgrey;
         width: 49%;
-    height: 100%;
-    float: right;
+        float: right;
+
+        display: grid;
+        grid-template-columns: 100px 100px 100px;
+        grid-template-rows: auto;
+        box-sizing: border-box;
+        justify-content: space-evenly;
+        align-items: center;
       }
-      #previousbtn{
-          margin-right: 75px;;
+      
+      /* Make the image responsive */
+      .container img {
+        width: 80px;
+        height: 80px;
+        margin: 8px;
+        
       }
-      #nextbtn{
-          margin-left: 75px;
+      
+      /* Style the button and place it in the middle of the container/image */
+      .container .img .btn {
+        transform: translate(-60%, -60%);
+        -ms-transform: translate(-60%, -60%);
+        background-color: #555;
+        color: white;
+        cursor: pointer;
       }
-      #downbtn{
-          margin-left: 75px;
+      
+      .container .btn:hover {
+        background-color: dimgray;
       }
-    </style>
+</style>
+<div class="container">
+  <!--div><h1 id="shit">shit</h1></div>
+  <!--div id="div1">
+    <img src="./rpb1.jpg" alt="gl" id="gimg">
+    <button id="dlt" onclick="del()" >del</button>
+  </div-->
+</div>
+
+
+<div id="splash">
+  <img src="./rpb1.jpg" alt="demo image" id="mainImage">
+
+  </div> 
+
+<div id="controls">
+  <button id="previousbtn" onclick="previousImage()">Previous Image</button>
+  <button id="nextbtn" onclick="nextImage()"> Next Image</button>
+  <button id="downbtn" onclick="downloadImage()"> Download Image</button>
+</div>
+
+<style>
+  img{
+    width: 49%;
+height: 100%;
+float: right;
+  }
+  #previousbtn{
+      margin-right: 75px;;
+  }
+  #nextbtn{
+      margin-left: 75px;
+  }
+  #downbtn{
+      margin-left: 75px;
+  }
+</style>
+
+
 </head>
 
 <body>
   <script>
-    //  import JSZip from 'jszip';
-// import FileSaver from 'file-saver';
-//const zip =require("jszip")
-const zip = new JSZip();
-
+    /*$('.new_img .new_btn').on('click',function(){
+      $(this).parent('.new_img').remove();
+    });*/
     let cube;
     const scene = new THREE.Scene();
-  //  const zip = THREE.zip();
 
     const light = new THREE.DirectionalLight('#ffffff', 0.9);
     light.position.set(-20, 0, 100);
@@ -87,60 +131,156 @@ const zip = new JSZip();
           scene.add(object);
         });
       });
-    x_angles = [0,1,1,1,1];
-    y_angles = [0,1,1,1,1]; 
-    var imgArray = new Array();
-    i = 1, j=1, ind= 1, ishow=0;;
 
-    imgArray[0] = new Image();
+x_angles = [0,1,1,1,1];
+y_angles = [0,1,1,1,1];
+var imgArray = new Array();
+
+i = 1, j=1, ind= 1,ishow=0;
+
+ff=true
+imgArray[0] = new Image();
 imgArray[0].src = './rpb1.jpg';
 
     function render() {
 
-      if (cube && i<=4) {
+        if (cube && i<=4) {
         cube.rotation.x += 1;
         console.log(i)
-
+        
         //Image Snapshot
         imgArray[ind] = new Image();
         renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
-        //zip.file(imgArray[ind].name, imgArray[ind].src);
-         console.log(" this \n", imgArray[ind].src)
-        
+        imgArray[ind].id=ind
         ind++;
         i++;
         
-      }
+        }
+
       else if (cube && j<=4) {
         cube.rotation.y += 1;
         console.log(j)
         imgArray[ind] = new Image();
         renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
-        // zip.file(imgArray[ind].name, imgArray[ind].src);
-        
+        imgArray[ind].id=ind
         ind++;
         j++;
       }
-
-    
+      else if(ind>7&&ff){
+      gallery();
+    ff=false  
+    }
       requestAnimationFrame(render);
       renderer.render(scene, camera);
+      //console.log("Test");
+      //console.log("Length:"+imgArray.length);
+    }
+  
+  let all_container = document.querySelector('.container');
+      
+      let new_div = document.createElement("div");
+      let new_img = document.createElement("img");
+      let new_btn = document.createElement("button");
+   
+xst=true,yst=true
+
+    function gallery(){
+    
+  
+      for(var t=1; t<imgArray.length ;t++)
+      {   
+        console.log("Length:kk  "+imgArray.length,t);
+      
+      let new_div = document.createElement("div");
+      let new_img = document.createElement("img");
+      let new_btn = document.createElement("button");
+      
+      new_btn.innerHTML = "del";
+          new_btn.id=t
+         if(xst){
+           let h1Node = document.createElement('h1');
+
+          h1Node.id = 'myId';
+          h1Node.textContent = 'X-angles';
+          new_div.appendChild(h1Node);
+
+        //   let br = document.createElement('br');        
+        // // br.textContent = '</br>';
+        //   new_div.appendChild(br);
+          xst=false
+         }
+         else if(t>4&&yst){
+          let h1Node = document.createElement('h1');
+          h1Node.id = 'myId';
+          h1Node.textContent = 'Y-angles ';
+          new_div.appendChild(h1Node);
+          yst=false
+         }
+          
+          
+      new_img.src = imgArray[t].src;
+
+      new_img.classList.add("img");
+      new_btn.classList.add("btn");
+      
+
+          new_div.appendChild(new_img);
+          new_div.appendChild(new_btn);
+         
+          all_container.appendChild(new_div); 
+           
+          new_btn.onclick = async function(){
+
+      //console.log(" delted",new_img,'\n','t  ',t,imgArray[t],'v   ');
+     new_div.removeChild(new_img)
+     new_div.removeChild(new_btn);
+     new_div.remove(all_container)
+     console.log("id  ",new_img.id," hi")
+   
+      dlt(new_btn.id)  
+    }; 
+     
+      }
+    
     }
 
-    function nextImage(){
-    var img = document.getElementById("mainImage");
-    console.log(imgArray.length)
-   
-            document.getElementById("mainImage").src = imgArray[ishow+1].src;
-      ishow++;
-}
-function previousImage(){
-    var img = document.getElementById("mainImage");
-    document.getElementById("mainImage").src = imgArray[ishow-1].src;
-      ishow--;
-}
+
+
+
+    function dlt(btn_id){
+
+        v=0
+     // new_im.src=new_img.src
+      for(var t=1; t<imgArray.length ;t++,v++)
+      {  
+        console.log("Length:from dlt "+imgArray.length,t);
+       if(t == btn_id)
+          {
+          continue;
+             //console.log('god',t)
+           }
+          imgArray[v]=imgArray[t]
+          
+              }
+      imgArray.length-=1;
+    }
+
+  function nextImage(){
+      var img = document.getElementById("mainImage");
+      console.log(imgArray.length)
+     
+              document.getElementById("mainImage").src = imgArray[ishow+1].src;
+        ishow++;
+  }
+  function previousImage(){
+      var img = document.getElementById("mainImage");
+      document.getElementById("mainImage").src = imgArray[ishow-1].src;
+        ishow--;
+  }
+
+
   
 function downloadImage(){
     var a = document.createElement("a")
@@ -185,48 +325,16 @@ function dataURLtoFile(dataurl, filename) {
  
  return new File([u8arr], filename, {type:mime});
 }
-function downtest(){
-
-  var zip = new JSZip();
-  var img = zip.folder("images");
-
-  for (var i=0; i<imgArray.length; i++) {
-    //img.file("image("+i+").png", imgArray[i].src); 
-   JSZipUtils.getBinaryContent(imgArray[i], async function (err, imgArray) {
-        if (err) {
-          throw err; // or handle the error
-        }
-        zip.file(`image(${i}).png`, imgArray[i].src, { binary: true });
-      
-    })
-  }
-        //count++;
-      //  if (count == urls.length) {
-          var zipFile =  zip.generateAsync({ type: 'blob' });
-          saveAs(zipFile, zipFilename);
-      //  }
-  //    });
-}
-
-
-function createArchive(){
-  // Use jszip
-  var zip = new JSZip();
-  var img = zip.folder("images");
-
-  for (var i=0; i<imgArray.length; i++) {
-    img.file("image("+i+").png", imgArray[i].src); 
-  }
-      zip.generateAsync({type:"blob"}).then(function(file){
-        saveAs(file, "images.zip");
-
-      })
-
-}
   
     
+
+
+
+
     render();
+  
   </script>
+
 </body>
 
 </html>
