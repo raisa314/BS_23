@@ -7,6 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/100/three.js"></script>
   <script src="./threejs-loader/OBJLoader.js"></script>
   <script src="./threejs-loader/MTLLoader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.1.0/jszip-utils.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.9.1/jszip.js"></script>
     <style type="text/css">
@@ -105,7 +106,7 @@ imgArray[0].src = './rpb1.jpg';
         renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
         //zip.file(imgArray[ind].name, imgArray[ind].src);
-         console.log("i am the god \n", imgArray[ind].src)
+         console.log(" this \n", imgArray[ind].src)
         
         ind++;
         i++;
@@ -145,16 +146,20 @@ function downloadImage(){
     var a = document.createElement("a")
     document.body.appendChild(a);
     for(var i = 1; i < imgArray.length;i++){
-      a.href= imgArray[i].src
-      zip.file(`image(${i}).png`, a.href);
-
+    //  document.body.appendChild(a);
+      a.href= imgArray[i].src;
+      a.download=`image(${i}).png`
+     zip.file(`mymage(${i}).png`, dataURLtoFile(imgArray[i].src,`mymage(${i}).png`), {binary:true});
+     // a.click()
+     //zip.file(`mymage(${i}).png`, imgArray[i].src,{binary:true});
+      //document.body.removeChild(a);
     }
 
               
               try {
          zip.generateAsync({ type: 'blob' }).then(function (content) {
-
-           saveAs(content, 'download');
+          //a.click()
+           saveAs(content, 'download.zip');
          //  FileSaver.saveAs(content, 'fileName.zip')
        });
 
@@ -164,6 +169,58 @@ function downloadImage(){
         }
 
 
+
+}
+function dataURLtoFile(dataurl, filename) {
+ 
+ var arr = dataurl.split(','),
+     mime = arr[0].match(/:(.*?);/)[1],
+     bstr = atob(arr[1]), 
+     n = bstr.length, 
+     u8arr = new Uint8Array(n);
+     
+ while(n--){
+     u8arr[n] = bstr.charCodeAt(n);
+ }
+ 
+ return new File([u8arr], filename, {type:mime});
+}
+function downtest(){
+
+  var zip = new JSZip();
+  var img = zip.folder("images");
+
+  for (var i=0; i<imgArray.length; i++) {
+    //img.file("image("+i+").png", imgArray[i].src); 
+   JSZipUtils.getBinaryContent(imgArray[i], async function (err, imgArray) {
+        if (err) {
+          throw err; // or handle the error
+        }
+        zip.file(`image(${i}).png`, imgArray[i].src, { binary: true });
+      
+    })
+  }
+        //count++;
+      //  if (count == urls.length) {
+          var zipFile =  zip.generateAsync({ type: 'blob' });
+          saveAs(zipFile, zipFilename);
+      //  }
+  //    });
+}
+
+
+function createArchive(){
+  // Use jszip
+  var zip = new JSZip();
+  var img = zip.folder("images");
+
+  for (var i=0; i<imgArray.length; i++) {
+    img.file("image("+i+").png", imgArray[i].src); 
+  }
+      zip.generateAsync({type:"blob"}).then(function(file){
+        saveAs(file, "images.zip");
+
+      })
 
 }
   
