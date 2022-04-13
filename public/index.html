@@ -7,7 +7,9 @@
   <script src="./threejs-loader/OBJLoader.js"></script>
   <script src="./threejs-loader/MTLLoader.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.9.1/jszip.js"></script>
+  
   
 
   <style type="text/css">
@@ -50,6 +52,9 @@
       
       .container .btn:hover {
         background-color: dimgray;
+      }
+      .hId1 .hId2{
+        color: greenyellow;
       }
 </style>
 <div class="container">
@@ -94,9 +99,11 @@ float: right;
 
 <body>
   <script>
-    /*$('.new_img .new_btn').on('click',function(){
-      $(this).parent('.new_img').remove();
-    });*/
+    
+
+    const zip = new JSZip();
+
+
     let cube;
     const scene = new THREE.Scene();
 
@@ -117,6 +124,61 @@ float: right;
 
     const mtlLoader = new THREE.MTLLoader();
     mtlLoader.setPath('./blender-files/');
+
+   
+      //   Load the background texture
+      //  var texture = THREE.ImageUtils.loadTexture( 'rpb1.jpg' );
+    
+    
+      var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2, 0),
+            new THREE.MeshBasicMaterial({
+              // Math.floor((Math.random() * 3) + 1);
+              map:THREE.ImageUtils.loadTexture(`./image/bg (${Math.floor((Math.random() * 12) + 1)}).jpg`)
+            }));
+
+        backgroundMesh .material.depthTest = false;
+        backgroundMesh .material.depthWrite = false;
+
+        // Create your background scene
+        var backgroundScene = new THREE.Scene();
+        var backgroundCamera = new THREE.Camera();
+        backgroundScene .add(backgroundCamera );
+        backgroundScene .add(backgroundMesh );
+
+
+
+
+//for color on bg/ floor
+//just paste it
+
+// new THREE.MeshBasicMaterial({
+//              color: 0xffff00
+//               //  map:THREE.ImageUtils.loadTexture('table2.jpg')
+//             }));
+
+
+
+           // Load the floor texture
+          // var texture_f = THREE.ImageUtils.loadTexture( 'table2.jpg' );
+        // var fMesh = new THREE.Mesh(
+        
+        //     new THREE.PlaneGeometry(6,0, 100),
+        //     new THREE.MeshBasicMaterial({
+        //      color: 0xffff00
+        //       //  map:THREE.ImageUtils.loadTexture('table2.jpg')
+        //     }));
+
+        // fMesh .material.depthTest = false;
+        // fMesh .material.depthWrite = false;
+        // // fMesh .position(10,10,10)
+
+        // // Create your floor scene
+        // var fScene = new THREE.Scene();
+        // var fCamera = new THREE.Camera();
+        // fScene .add(fCamera );
+        // fScene .add(fMesh );
+
 
     new Promise((resolve) => {
       mtlLoader.load('b2-pack.mtl', (materials) => {
@@ -143,39 +205,91 @@ imgArray[0] = new Image();
 imgArray[0].src = './rpb1.jpg';
 
     function render() {
+      renderer.autoClear = false;
+            renderer.clear();
+      
+      requestAnimationFrame(render); 
+        //bgimage()
 
+    
         if (cube && i<=4) {
         cube.rotation.x += 1;
-        console.log(i)
-        
+       // console.log(i)
+      
+      bgimage()
+       
         //Image Snapshot
         imgArray[ind] = new Image();
-        renderer.render(scene, camera);
+
+        renderer.render(backgroundScene , backgroundCamera );
+       // renderer.render(fScene, fCamera);     
+
+        renderer.render(scene, camera);     
         imgArray[ind].src = renderer.domElement.toDataURL();
         imgArray[ind].id=ind
         ind++;
         i++;
-        
+               
+      renderer.render(backgroundScene , backgroundCamera );
+     // renderer.render(fScene, fCamera);   
+      renderer.render(scene, camera);
+     
         }
 
       else if (cube && j<=4) {
         cube.rotation.y += 1;
-        console.log(j)
+      //  console.log(j)
+      
+     bgimage()
+
         imgArray[ind] = new Image();
-        renderer.render(scene, camera);
+         
+      renderer.render(backgroundScene , backgroundCamera );
+      //renderer.render(fScene, fCamera);   
+        
+      renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
         imgArray[ind].id=ind
         ind++;
         j++;
+               
+      renderer.render(backgroundScene , backgroundCamera );
+     // renderer.render(fScene, fCamera);   
+      renderer.render(scene, camera);
+     
       }
       else if(ind>7&&ff){
       gallery();
     ff=false  
     }
-      requestAnimationFrame(render);
+   
+         
+      renderer.render(backgroundScene , backgroundCamera );
+     // renderer.render(fScene, fCamera);   
       renderer.render(scene, camera);
-      //console.log("Test");
+     
+            //console.log("Test");
       //console.log("Length:"+imgArray.length);
+    }
+
+
+  function  bgimage(){
+    var num=Math.floor((Math.random() * 12) + 1)
+       var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2, 0),
+            new THREE.MeshBasicMaterial({
+              map:THREE.ImageUtils.loadTexture(`./image/bg (${num}).jpg`)
+            }));
+console.log("find me here ",ind,num)
+        backgroundMesh .material.depthTest = false;
+        backgroundMesh .material.depthWrite = false;
+
+        // Create your background scene
+        var backgroundScene = new THREE.Scene();
+        var backgroundCamera = new THREE.Camera();
+        backgroundScene .add(backgroundCamera );
+        backgroundScene .add(backgroundMesh );
+         
     }
   
   let all_container = document.querySelector('.container');
@@ -183,7 +297,9 @@ imgArray[0].src = './rpb1.jpg';
       let new_div = document.createElement("div");
       let new_img = document.createElement("img");
       let new_btn = document.createElement("button");
-   
+      
+      let hn1 = document.createElement('h3');
+      let hn2 = document.createElement('h3');
 xst=true,yst=true
 
     function gallery(){
@@ -199,23 +315,32 @@ xst=true,yst=true
       
       new_btn.innerHTML = "del";
           new_btn.id=t
+
          if(xst){
-           let h1Node = document.createElement('h1');
-
-          h1Node.id = 'myId';
-          h1Node.textContent = 'X-angles';
-          new_div.appendChild(h1Node);
-
-        //   let br = document.createElement('br');        
-        // // br.textContent = '</br>';
-        //   new_div.appendChild(br);
+        
+          hn1.id = 'hId1';
+          hn1.textContent = 'X-angles----';
+          new_div.appendChild(hn1);
+          // hn1.appendChild(new_div)
+          let br = document.createElement('p');   
+          // br.innerHTML = "<br/>";     
+          hn1.appendChild(br);
+          
+        
           xst=false
          }
          else if(t>4&&yst){
-          let h1Node = document.createElement('h1');
-          h1Node.id = 'myId';
-          h1Node.textContent = 'Y-angles ';
-          new_div.appendChild(h1Node);
+         
+          hn2.id = 'hId2';
+          hn2.textContent = 'Y-angles-----';
+          new_div.appendChild(hn2);
+          // hn2.appendChild(new_div)
+          let br = document.createElement('p');  
+          // br.innerHTML = "<br/>";      
+          
+         hn2.appendChild(br);
+        
+                 
           yst=false
          }
           
@@ -225,6 +350,8 @@ xst=true,yst=true
       new_img.classList.add("img");
       new_btn.classList.add("btn");
       
+      // new_div.appendChild(hn1);
+      // new_div.appendChild(hn2);
 
           new_div.appendChild(new_img);
           new_div.appendChild(new_btn);
@@ -237,7 +364,7 @@ xst=true,yst=true
      new_div.removeChild(new_img)
      new_div.removeChild(new_btn);
      new_div.remove(all_container)
-     console.log("id  ",new_img.id," hi")
+  //   console.log("id  ",new_img.id," hi")
    
       dlt(new_btn.id)  
     }; 
@@ -246,16 +373,12 @@ xst=true,yst=true
     
     }
 
-
-
-
     function dlt(btn_id){
 
-        v=0
      // new_im.src=new_img.src
-      for(var t=1; t<imgArray.length ;t++,v++)
+      for(var t=1; t<imgArray.length ;t++)
       {  
-        console.log("Length:from dlt "+imgArray.length,t);
+        console.log("Length:from dlt "+imgArray.length);
        if(t == btn_id)
           {
           continue;
@@ -283,13 +406,15 @@ xst=true,yst=true
 
   
 function downloadImage(){
-    var a = document.createElement("a")
-    document.body.appendChild(a);
+    // var a = document.createElement("a")
+    // document.body.appendChild(a);
+    
+   var folder=zip.folder("downloadme");
     for(var i = 1; i < imgArray.length;i++){
     //  document.body.appendChild(a);
-      a.href= imgArray[i].src;
-      a.download=`image(${i}).png`
-     zip.file(`mymage(${i}).png`, dataURLtoFile(imgArray[i].src,`mymage(${i}).png`), {binary:true});
+      // a.href= imgArray[i].src;
+      // a.download=`image(${i}).png`
+      folder.file(`image(${i}).png`,  dataURLtoFile(imgArray[i].src,`mymage(${i}).png`));
      // a.click()
      //zip.file(`mymage(${i}).png`, imgArray[i].src,{binary:true});
       //document.body.removeChild(a);
@@ -299,7 +424,8 @@ function downloadImage(){
               try {
          zip.generateAsync({ type: 'blob' }).then(function (content) {
           //a.click()
-           saveAs(content, 'download.zip');
+          
+           saveAs(content, "folder");
          //  FileSaver.saveAs(content, 'fileName.zip')
        });
 
