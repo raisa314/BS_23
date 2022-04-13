@@ -69,7 +69,7 @@
 <body>
   <script>
     width= 640, height= 640;
-    width_416= 512, height_416= 512;
+    width_512= 512, height_512= 512;
     const zip = new JSZip();
     /*$('.new_img .new_btn').on('click',function(){
       $(this).parent('.new_img').remove();
@@ -117,12 +117,12 @@
       ii=0, ishow=0;
 
 var imgArray = new Array();
-var imgArray_416 = new Array();
+var imgArray_512 = new Array();
 i = 1, j=1, ind= 0, ang1=0, ang2=0,top_ang=0, down_ang=0;
 
 ff=true
 imgArray[0] = new Image();
-imgArray_416[0] = new Image();
+imgArray_512[0] = new Image();
 //imgArray[0].src = './rpb1.jpg';
 
     function render() {
@@ -140,10 +140,10 @@ imgArray_416[0] = new Image();
         renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
 
-        imgArray_416[ind] = new Image();
-        renderer.setSize(width_416, height_416, false);
+        imgArray_512[ind] = new Image();
+        renderer.setSize(width_512, height_512, false);
         renderer.render(scene, camera);
-        imgArray_416[ind].src = renderer.domElement.toDataURL();
+        imgArray_512[ind].src = renderer.domElement.toDataURL();
         ind++;
         i++;
         
@@ -158,10 +158,10 @@ imgArray_416[0] = new Image();
         renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
 
-        imgArray_416[ind] = new Image();
-        renderer.setSize(width_416, height_416, false);
+        imgArray_512[ind] = new Image();
+        renderer.setSize(width_512, height_512, false);
         renderer.render(scene, camera);
-        imgArray_416[ind].src = renderer.domElement.toDataURL();
+        imgArray_512[ind].src = renderer.domElement.toDataURL();
         ind++;
         j++;
       }
@@ -177,10 +177,10 @@ imgArray_416[0] = new Image();
       //  zip.file(imgArray[ind], imgArray[ind].src);
       //console.log(imgArray[ind])
 
-        imgArray_416[ind] = new Image();
-        renderer.setSize(width_416, height_416, false);
+        imgArray_512[ind] = new Image();
+        renderer.setSize(width_512, height_512, false);
         renderer.render(scene, camera);
-        imgArray_416[ind].src = renderer.domElement.toDataURL();
+        imgArray_512[ind].src = renderer.domElement.toDataURL();
         ang1++;
         ind++;
         
@@ -198,10 +198,10 @@ imgArray_416[0] = new Image();
       //  zip.file(imgArray[ind], imgArray[ind].src);
       //console.log(imgArray[ind])
 
-        imgArray_416[ind] = new Image();
-        renderer.setSize(width_416, height_416, false);
+        imgArray_512[ind] = new Image();
+        renderer.setSize(width_512, height_512, false);
         renderer.render(scene, camera);
-        imgArray_416[ind].src = renderer.domElement.toDataURL();
+        imgArray_512[ind].src = renderer.domElement.toDataURL();
         ang2++;
         ind++;
         
@@ -220,10 +220,10 @@ imgArray_416[0] = new Image();
       //  zip.file(imgArray[ind], imgArray[ind].src);
       //console.log(imgArray[ind])
 
-        imgArray_416[ind] = new Image();
-        renderer.setSize(width_416, height_416, false);
+        imgArray_512[ind] = new Image();
+        renderer.setSize(width_512, height_512, false);
         renderer.render(scene, camera);
-        imgArray_416[ind].src = renderer.domElement.toDataURL();
+        imgArray_512[ind].src = renderer.domElement.toDataURL();
         top_ang++;
         ind++;
         
@@ -241,10 +241,10 @@ imgArray_416[0] = new Image();
         renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
 
-        imgArray_416[ind] = new Image();
-        renderer.setSize(width_416, height_416, false);
+        imgArray_512[ind] = new Image();
+        renderer.setSize(width_512, height_512, false);
         renderer.render(scene, camera);
-        imgArray_416[ind].src = renderer.domElement.toDataURL();
+        imgArray_512[ind].src = renderer.domElement.toDataURL();
         //zip.file(imgArray[ind], imgArray[ind].src);
         //console.log()
         down_ang++;
@@ -296,10 +296,10 @@ imgArray_416[0] = new Image();
       }
     }
     function downloadImage(){
-      var folder416=zip.folder("download416");
+      var folder512=zip.folder("download512");
       var folder640=zip.folder("download640");
       for(var i = 1; i < imgArray.length;i++){
-        folder416.file(`image(${i}).png`,  dataURLtoFile(imgArray_416[i].src,`mymage(${i}).png`));
+        folder512.file(`image(${i}).png`,  dataURLtoFile(imgArray_512[i].src,`mymage(${i}).png`));
         folder640.file(`image(${i}).png`,  dataURLtoFile(imgArray[i].src,`mymage(${i}).png`));
       }
       
