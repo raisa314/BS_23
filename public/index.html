@@ -6,17 +6,104 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/100/three.js"></script>
   <script src="./threejs-loader/OBJLoader.js"></script>
   <script src="./threejs-loader/MTLLoader.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.9.1/jszip.js"></script>
+  
+  
+
   <style type="text/css">
     body {
+      padding: 0px;
       margin: 0px;
-      height: 100%;
-      width: 50%;
+      height: 90%;
+      width: 100%;
     }
-  </style>
+    .container {
+        position: relative;
+        background-color: dimgrey;
+        width: 49%;
+        float: right;
+
+        display: grid;
+        grid-template-columns: 100px 100px 100px;
+        grid-template-rows: auto;
+        box-sizing: border-box;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+      
+      /* Make the image responsive */
+      .container img {
+        width: 80px;
+        height: 80px;
+        margin: 8px;
+        
+      }
+      
+      /* Style the button and place it in the middle of the container/image */
+      .container .img .btn {
+        transform: translate(-60%, -60%);
+        -ms-transform: translate(-60%, -60%);
+        background-color: #555;
+        color: white;
+        cursor: pointer;
+      }
+      
+      .container .btn:hover {
+        background-color: dimgray;
+      }
+      .hId1 .hId2{
+        color: greenyellow;
+      }
+</style>
+<div class="container">
+  <!--div><h1 id="shit">shit</h1></div>
+  <!--div id="div1">
+    <img src="./rpb1.jpg" alt="gl" id="gimg">
+    <button id="dlt" onclick="del()" >del</button>
+  </div-->
+</div>
+
+
+<div id="splash">
+  <img src="./rpb1.jpg" alt="demo image" id="mainImage">
+
+  </div> 
+
+<div id="controls">
+  <button id="previousbtn" onclick="previousImage()">Previous Image</button>
+  <button id="nextbtn" onclick="nextImage()"> Next Image</button>
+  <button id="downbtn" onclick="downloadImage()"> Download Image</button>
+</div>
+
+<style>
+  img{
+    width: 49%;
+height: 100%;
+float: right;
+  }
+  #previousbtn{
+      margin-right: 75px;;
+  }
+  #nextbtn{
+      margin-left: 75px;
+  }
+  #downbtn{
+      margin-left: 75px;
+  }
+</style>
+
+
 </head>
 
 <body>
   <script>
+    
+
+    const zip = new JSZip();
+
+
     let cube;
     const scene = new THREE.Scene();
 
@@ -29,7 +116,7 @@
     camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth/2, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
     const objLoader = new THREE.OBJLoader();
@@ -37,6 +124,61 @@
 
     const mtlLoader = new THREE.MTLLoader();
     mtlLoader.setPath('./blender-files/');
+
+   
+      //   Load the background texture
+      //  var texture = THREE.ImageUtils.loadTexture( 'rpb1.jpg' );
+    
+    
+      var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2, 0),
+            new THREE.MeshBasicMaterial({
+              // Math.floor((Math.random() * 3) + 1);
+              map:THREE.ImageUtils.loadTexture(`./image/bg (${Math.floor((Math.random() * 12) + 1)}).jpg`)
+            }));
+
+        backgroundMesh .material.depthTest = false;
+        backgroundMesh .material.depthWrite = false;
+
+        // Create your background scene
+        var backgroundScene = new THREE.Scene();
+        var backgroundCamera = new THREE.Camera();
+        backgroundScene .add(backgroundCamera );
+        backgroundScene .add(backgroundMesh );
+
+
+
+
+//for color on bg/ floor
+//just paste it
+
+// new THREE.MeshBasicMaterial({
+//              color: 0xffff00
+//               //  map:THREE.ImageUtils.loadTexture('table2.jpg')
+//             }));
+
+
+
+           // Load the floor texture
+          // var texture_f = THREE.ImageUtils.loadTexture( 'table2.jpg' );
+        // var fMesh = new THREE.Mesh(
+        
+        //     new THREE.PlaneGeometry(6,0, 100),
+        //     new THREE.MeshBasicMaterial({
+        //      color: 0xffff00
+        //       //  map:THREE.ImageUtils.loadTexture('table2.jpg')
+        //     }));
+
+        // fMesh .material.depthTest = false;
+        // fMesh .material.depthWrite = false;
+        // // fMesh .position(10,10,10)
+
+        // // Create your floor scene
+        // var fScene = new THREE.Scene();
+        // var fCamera = new THREE.Camera();
+        // fScene .add(fCamera );
+        // fScene .add(fMesh );
+
 
     new Promise((resolve) => {
       mtlLoader.load('b2-pack.mtl', (materials) => {
@@ -51,38 +193,274 @@
           scene.add(object);
         });
       });
-x_angles = [0,1,2,3,4];
-y_angles = [0,1,2,3,4];
-var imgArray = new Array();
-i = 0, j=0, ind= 0;
-    function render() {
-      if (cube && i<=4) {
-        cube.rotation.x += 1;
-        console.log(i)
 
+x_angles = [0,1,1,1,1];
+y_angles = [0,1,1,1,1];
+var imgArray = new Array();
+
+i = 1, j=1, ind= 1,ishow=0;
+
+ff=true
+imgArray[0] = new Image();
+imgArray[0].src = './rpb1.jpg';
+
+    function render() {
+      renderer.autoClear = false;
+            renderer.clear();
+      
+      requestAnimationFrame(render); 
+        //bgimage()
+
+    
+        if (cube && i<=4) {
+        cube.rotation.x += 1;
+       // console.log(i)
+      
+      bgimage()
+       
         //Image Snapshot
         imgArray[ind] = new Image();
-        renderer.render(scene, camera);
+
+        renderer.render(backgroundScene , backgroundCamera );
+       // renderer.render(fScene, fCamera);     
+
+        renderer.render(scene, camera);     
         imgArray[ind].src = renderer.domElement.toDataURL();
+        imgArray[ind].id=ind
         ind++;
         i++;
-        
-      }
+               
+      renderer.render(backgroundScene , backgroundCamera );
+     // renderer.render(fScene, fCamera);   
+      renderer.render(scene, camera);
+     
+        }
+
       else if (cube && j<=4) {
         cube.rotation.y += 1;
-        console.log(j)
+      //  console.log(j)
+      
+     bgimage()
+
         imgArray[ind] = new Image();
-        renderer.render(scene, camera);
+         
+      renderer.render(backgroundScene , backgroundCamera );
+      //renderer.render(fScene, fCamera);   
+        
+      renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
+        imgArray[ind].id=ind
         ind++;
         j++;
-      }
-      requestAnimationFrame(render);
+               
+      renderer.render(backgroundScene , backgroundCamera );
+     // renderer.render(fScene, fCamera);   
       renderer.render(scene, camera);
+     
+      }
+      else if(ind>7&&ff){
+      gallery();
+    ff=false  
+    }
+   
+         
+      renderer.render(backgroundScene , backgroundCamera );
+     // renderer.render(fScene, fCamera);   
+      renderer.render(scene, camera);
+     
+            //console.log("Test");
+      //console.log("Length:"+imgArray.length);
     }
 
+
+  function  bgimage(){
+    var num=Math.floor((Math.random() * 12) + 1)
+       var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2, 0),
+            new THREE.MeshBasicMaterial({
+              map:THREE.ImageUtils.loadTexture(`./image/bg (${num}).jpg`)
+            }));
+console.log("find me here ",ind,num)
+        backgroundMesh .material.depthTest = false;
+        backgroundMesh .material.depthWrite = false;
+
+        // Create your background scene
+        var backgroundScene = new THREE.Scene();
+        var backgroundCamera = new THREE.Camera();
+        backgroundScene .add(backgroundCamera );
+        backgroundScene .add(backgroundMesh );
+         
+    }
+  
+  let all_container = document.querySelector('.container');
+      
+      let new_div = document.createElement("div");
+      let new_img = document.createElement("img");
+      let new_btn = document.createElement("button");
+      
+      let hn1 = document.createElement('h3');
+      let hn2 = document.createElement('h3');
+xst=true,yst=true
+
+    function gallery(){
+    
+  
+      for(var t=1; t<imgArray.length ;t++)
+      {   
+        console.log("Length:kk  "+imgArray.length,t);
+      
+      let new_div = document.createElement("div");
+      let new_img = document.createElement("img");
+      let new_btn = document.createElement("button");
+      
+      new_btn.innerHTML = "del";
+          new_btn.id=t
+
+         if(xst){
+        
+          hn1.id = 'hId1';
+          hn1.textContent = 'X-angles----';
+          new_div.appendChild(hn1);
+          // hn1.appendChild(new_div)
+          let br = document.createElement('p');   
+          // br.innerHTML = "<br/>";     
+          hn1.appendChild(br);
+          
+        
+          xst=false
+         }
+         else if(t>4&&yst){
+         
+          hn2.id = 'hId2';
+          hn2.textContent = 'Y-angles-----';
+          new_div.appendChild(hn2);
+          // hn2.appendChild(new_div)
+          let br = document.createElement('p');  
+          // br.innerHTML = "<br/>";      
+          
+         hn2.appendChild(br);
+        
+                 
+          yst=false
+         }
+          
+          
+      new_img.src = imgArray[t].src;
+
+      new_img.classList.add("img");
+      new_btn.classList.add("btn");
+      
+      // new_div.appendChild(hn1);
+      // new_div.appendChild(hn2);
+
+          new_div.appendChild(new_img);
+          new_div.appendChild(new_btn);
+         
+          all_container.appendChild(new_div); 
+           
+          new_btn.onclick = async function(){
+
+      //console.log(" delted",new_img,'\n','t  ',t,imgArray[t],'v   ');
+     new_div.removeChild(new_img)
+     new_div.removeChild(new_btn);
+     new_div.remove(all_container)
+  //   console.log("id  ",new_img.id," hi")
+   
+      dlt(new_btn.id)  
+    }; 
+     
+      }
+    
+    }
+
+    function dlt(btn_id){
+
+     // new_im.src=new_img.src
+      for(var t=1; t<imgArray.length ;t++)
+      {  
+        console.log("Length:from dlt "+imgArray.length);
+       if(t == btn_id)
+          {
+          continue;
+             //console.log('god',t)
+           }
+          imgArray[v]=imgArray[t]
+          
+              }
+      imgArray.length-=1;
+    }
+
+  function nextImage(){
+      var img = document.getElementById("mainImage");
+      console.log(imgArray.length)
+     
+              document.getElementById("mainImage").src = imgArray[ishow+1].src;
+        ishow++;
+  }
+  function previousImage(){
+      var img = document.getElementById("mainImage");
+      document.getElementById("mainImage").src = imgArray[ishow-1].src;
+        ishow--;
+  }
+
+
+  
+function downloadImage(){
+    // var a = document.createElement("a")
+    // document.body.appendChild(a);
+    
+   var folder=zip.folder("downloadme");
+    for(var i = 1; i < imgArray.length;i++){
+    //  document.body.appendChild(a);
+      // a.href= imgArray[i].src;
+      // a.download=`image(${i}).png`
+      folder.file(`image(${i}).png`,  dataURLtoFile(imgArray[i].src,`mymage(${i}).png`));
+     // a.click()
+     //zip.file(`mymage(${i}).png`, imgArray[i].src,{binary:true});
+      //document.body.removeChild(a);
+    }
+
+              
+              try {
+         zip.generateAsync({ type: 'blob' }).then(function (content) {
+          //a.click()
+          
+           saveAs(content, "folder");
+         //  FileSaver.saveAs(content, 'fileName.zip')
+       });
+
+        } catch (error) {
+        // TODO
+        throw new Error(error );
+        }
+
+
+
+}
+function dataURLtoFile(dataurl, filename) {
+ 
+ var arr = dataurl.split(','),
+     mime = arr[0].match(/:(.*?);/)[1],
+     bstr = atob(arr[1]), 
+     n = bstr.length, 
+     u8arr = new Uint8Array(n);
+     
+ while(n--){
+     u8arr[n] = bstr.charCodeAt(n);
+ }
+ 
+ return new File([u8arr], filename, {type:mime});
+}
+  
+    
+
+
+
+
     render();
+  
   </script>
+
 </body>
 
 </html>
