@@ -9,101 +9,62 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.9.1/jszip.js"></script>
-  
-  
 
   <style type="text/css">
-    body {
-      padding: 0px;
-      margin: 0px;
-      height: 90%;
-      width: 100%;
-    }
-    .container {
-        position: relative;
-        background-color: dimgrey;
-        width: 49%;
-        float: right;
-
-        display: grid;
-        grid-template-columns: 100px 100px 100px;
-        grid-template-rows: auto;
-        box-sizing: border-box;
-        justify-content: space-evenly;
-        align-items: center;
-      }
+    .container{
+      background-color: grey;
+      width: 49%;
+      min-height: 100%;
+      float: right;
+      justify-items: center;
       
-      /* Make the image responsive */
-      .container img {
-        width: 80px;
-        height: 80px;
-        margin: 8px;
-        
-      }
-      
-      /* Style the button and place it in the middle of the container/image */
-      .container .img .btn {
-        transform: translate(-60%, -60%);
-        -ms-transform: translate(-60%, -60%);
-        background-color: #555;
-        color: white;
-        cursor: pointer;
-      }
-      
-      .container .btn:hover {
-        background-color: dimgray;
-      }
-      .hId1 .hId2{
-        color: greenyellow;
-      }
+  }
+  .dv{
+      background-color: transparent;
+      float: left;
+      margin: 10px;
+      position: relative;
+  }
+  .img{
+      width: 100px;
+      height: 100px;
+  }
+  .container .button{
+      bottom: 0;
+      right: 0; 
+      background: transparent;
+      border: none;
+      position: absolute;
+      align-content: bottom;
+  }
+  .button:hover{
+      cursor: pointer;
+      background-color: dimgray;
+      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  }
+  .button:active {
+    box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24);
+    transform: translateY(4px);
+    /* Moving button 4px to y-axis */
+}
 </style>
-<div class="container">
-  <!--div><h1 id="shit">shit</h1></div>
-  <!--div id="div1">
-    <img src="./rpb1.jpg" alt="gl" id="gimg">
-    <button id="dlt" onclick="del()" >del</button>
-  </div-->
-</div>
-
-
-<div id="splash">
-  <img src="./rpb1.jpg" alt="demo image" id="mainImage">
-
-  </div> 
+<div class="container"></div>
 
 <div id="controls">
-  <button id="previousbtn" onclick="previousImage()">Previous Image</button>
-  <button id="nextbtn" onclick="nextImage()"> Next Image</button>
   <button id="downbtn" onclick="downloadImage()"> Download Image</button>
 </div>
 
 <style>
-  img{
-    width: 49%;
-height: 100%;
-float: right;
-  }
-  #previousbtn{
-      margin-right: 75px;;
-  }
-  #nextbtn{
-      margin-left: 75px;
-  }
   #downbtn{
       margin-left: 75px;
   }
 </style>
 
-
 </head>
 
 <body>
   <script>
-    
-
     const zip = new JSZip();
-
-
     let cube;
     const scene = new THREE.Scene();
 
@@ -116,7 +77,7 @@ float: right;
     camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth/2, window.innerHeight);
+    renderer.setSize(window.innerWidth/2.5, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
     const objLoader = new THREE.OBJLoader();
@@ -125,16 +86,18 @@ float: right;
     const mtlLoader = new THREE.MTLLoader();
     mtlLoader.setPath('./blender-files/');
 
-   
-      //   Load the background texture
-      //  var texture = THREE.ImageUtils.loadTexture( 'rpb1.jpg' );
-    
-    
-      var backgroundMesh = new THREE.Mesh(
+    ///bg image
+    var backgroundMesh = new THREE.Mesh(
             new THREE.PlaneGeometry(2, 2, 0),
+            
+              //for color on bg/ floor
+              //just replace it
+
+              // new THREE.MeshBasicMaterial({
+              //              color: 0xffff00
+              //             }));
             new THREE.MeshBasicMaterial({
-              // Math.floor((Math.random() * 3) + 1);
-              map:THREE.ImageUtils.loadTexture(`./image/bg (${Math.floor((Math.random() * 12) + 1)}).jpg`)
+                map:THREE.ImageUtils.loadTexture(`./image/bg (${Math.floor((Math.random() * 12) + 1)}).jpg`)
             }));
 
         backgroundMesh .material.depthTest = false;
@@ -146,38 +109,6 @@ float: right;
         backgroundScene .add(backgroundCamera );
         backgroundScene .add(backgroundMesh );
 
-
-
-
-//for color on bg/ floor
-//just paste it
-
-// new THREE.MeshBasicMaterial({
-//              color: 0xffff00
-//               //  map:THREE.ImageUtils.loadTexture('table2.jpg')
-//             }));
-
-
-
-           // Load the floor texture
-          // var texture_f = THREE.ImageUtils.loadTexture( 'table2.jpg' );
-        // var fMesh = new THREE.Mesh(
-        
-        //     new THREE.PlaneGeometry(6,0, 100),
-        //     new THREE.MeshBasicMaterial({
-        //      color: 0xffff00
-        //       //  map:THREE.ImageUtils.loadTexture('table2.jpg')
-        //     }));
-
-        // fMesh .material.depthTest = false;
-        // fMesh .material.depthWrite = false;
-        // // fMesh .position(10,10,10)
-
-        // // Create your floor scene
-        // var fScene = new THREE.Scene();
-        // var fCamera = new THREE.Camera();
-        // fScene .add(fCamera );
-        // fScene .add(fMesh );
 
 
     new Promise((resolve) => {
@@ -193,270 +124,253 @@ float: right;
           scene.add(object);
         });
       });
+      x_angles = [0,1,2,3,4,5,6,7,8];
+      y_angles = [0,1,2,3,4,5,6,7,8]; 
+      x_45_angles = [1,3,5,7,1,3,5,7,0];
+      y_45_angles = [1,3,5,7,1,3,5,7,0];
+      top_angles = [1,3,5,7,1,3,5,7,0];
+      down_angles = [1,3,5,7,1,3,5,7,0];
+      ii=0, ishow=0;
 
-x_angles = [0,1,1,1,1];
-y_angles = [0,1,1,1,1];
 var imgArray = new Array();
 
-i = 1, j=1, ind= 1,ishow=0;
+i = 0, j=0, ind= 0, ang1=0, ang2=0,top_ang=0, down_ang=0;
 
 ff=true
 imgArray[0] = new Image();
-imgArray[0].src = './rpb1.jpg';
+//imgArray[0].src = './rpb1.jpg';
 
     function render() {
       renderer.autoClear = false;
             renderer.clear();
       
       requestAnimationFrame(render); 
-        //bgimage()
-
-    
-        if (cube && i<=4) {
-        cube.rotation.x += 1;
-       // console.log(i)
+      renderer.render(backgroundScene , backgroundCamera );
       
-      bgimage()
-       
-        //Image Snapshot
+      if (cube && i<8) {
+        cube.rotation.x = ( x_angles[i] * (Math.PI / 2) );
+        cube.rotation.y = 0;
+        cube.rotation.z = 0;
+        
+        camera.position.z= 2.225;
         imgArray[ind] = new Image();
-
-        renderer.render(backgroundScene , backgroundCamera );
-       // renderer.render(fScene, fCamera);     
-
-        renderer.render(scene, camera);     
+        renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
-        imgArray[ind].id=ind
         ind++;
         i++;
-               
-      renderer.render(backgroundScene , backgroundCamera );
-     // renderer.render(fScene, fCamera);   
-      renderer.render(scene, camera);
-     
-        }
 
-      else if (cube && j<=4) {
-        cube.rotation.y += 1;
-      //  console.log(j)
-      
-     bgimage()
-
+        camera.position.z= 4;
         imgArray[ind] = new Image();
-         
-      renderer.render(backgroundScene , backgroundCamera );
-      //renderer.render(fScene, fCamera);   
-        
-      renderer.render(scene, camera);
+        renderer.render(scene, camera);
         imgArray[ind].src = renderer.domElement.toDataURL();
-        imgArray[ind].id=ind
+        ind++;
+        i++;
+
+        console.log(i)
+        }
+      
+      else if (cube && j<8) {
+          cube.rotation.x = 0;
+          cube.rotation.y =( y_angles[j] * (Math.PI / 2) );
+          cube.rotation.z = 0;
+        camera.position.z= 2.225;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
         ind++;
         j++;
-               
-      renderer.render(backgroundScene , backgroundCamera );
-     // renderer.render(fScene, fCamera);   
-      renderer.render(scene, camera);
-     
+
+        camera.position.z= 4;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        ind++;
+        j++;
+      
+        console.log(j);
+
       }
-      else if(ind>7&&ff){
-      gallery();
-    ff=false  
+      
+      else if (cube && ang1<8) {
+        cube.rotation.x = (x_45_angles[ang1]*(Math.PI / 4));
+        cube.rotation.y = 0;
+        cube.rotation.z = 0;
+        
+        camera.position.z=2.225;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        ang1++;
+        ind++;
+
+        camera.position.z=4;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        ang1++;
+        ind++;
+
+        console.log(ang1);
+      }
+
+      else if (cube && ang2<8) {
+        cube.rotation.x = 0;
+        cube.rotation.y = (y_45_angles[ang2]*(Math.PI / 4));
+        cube.rotation.z = 0;
+        
+        camera.position.z=2.225;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        ang2++;
+        ind++;
+        
+        camera.position.z=4;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        ang2++;
+        ind++;
+
+        console.log(ang2);
+      }  
+      
+      else if (cube && top_ang<8) {
+        if(top_ang == 4) { cube.rotation.x = 0;}
+        else
+        {cube.rotation.x = (Math.PI / 4);}
+        cube.rotation.y = (top_angles[top_ang]*(Math.PI / 4));
+        cube.rotation.z = 0;
+        
+        camera.position.z=2.225;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        top_ang++;
+        ind++;
+
+        camera.position.z=4;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        top_ang++;
+        ind++;
+        
+        console.log(top_ang);
+      }  
+      
+      else if (cube && down_ang<8) {
+        if(down_ang == 4) { cube.rotation.x = 0;}
+        else
+        {cube.rotation.x = -(Math.PI / 4);}
+        cube.rotation.y = (down_angles[down_ang]*(Math.PI / 4));
+        cube.rotation.z = 0;
+        
+        camera.position.z=2.225;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        down_ang++;
+        ind++;
+        
+        camera.position.z=4;
+        imgArray[ind] = new Image();
+        renderer.render(scene, camera);
+        imgArray[ind].src = renderer.domElement.toDataURL();
+        down_ang++;
+        ind++;
+
+        console.log(down_ang)
+      }
+      
+      else if(ind>7 && ff){
+          gallery();
+          ff=false  
     }
-   
-         
+      // requestAnimationFrame(render);
       renderer.render(backgroundScene , backgroundCamera );
      // renderer.render(fScene, fCamera);   
       renderer.render(scene, camera);
      
-            //console.log("Test");
-      //console.log("Length:"+imgArray.length);
     }
-
-
-  function  bgimage(){
-    var num=Math.floor((Math.random() * 12) + 1)
-       var backgroundMesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(2, 2, 0),
-            new THREE.MeshBasicMaterial({
-              map:THREE.ImageUtils.loadTexture(`./image/bg (${num}).jpg`)
-            }));
-console.log("find me here ",ind,num)
-        backgroundMesh .material.depthTest = false;
-        backgroundMesh .material.depthWrite = false;
-
-        // Create your background scene
-        var backgroundScene = new THREE.Scene();
-        var backgroundCamera = new THREE.Camera();
-        backgroundScene .add(backgroundCamera );
-        backgroundScene .add(backgroundMesh );
-         
-    }
-  
-  let all_container = document.querySelector('.container');
-      
-      let new_div = document.createElement("div");
-      let new_img = document.createElement("img");
-      let new_btn = document.createElement("button");
-      
-      let hn1 = document.createElement('h3');
-      let hn2 = document.createElement('h3');
-xst=true,yst=true
 
     function gallery(){
-    
-  
-      for(var t=1; t<imgArray.length ;t++)
+      let all_container = document.querySelector('.container');
+      
+      for(var t=0; t<imgArray.length ;t++)
       {   
-        console.log("Length:kk  "+imgArray.length,t);
-      
-      let new_div = document.createElement("div");
-      let new_img = document.createElement("img");
-      let new_btn = document.createElement("button");
-      
-      new_btn.innerHTML = "del";
-          new_btn.id=t
+        console.log("Length: "+imgArray.length);
 
-         if(xst){
+        let new_div = document.createElement("div");
+        let new_img = document.createElement("img");
+        let new_btn = document.createElement("button");
+        new_btn.innerHTML = "<img src='dlt.png' width='20' height='20'/>";
+        new_btn.id = t;
+        new_img.src = imgArray[t].src;
+
+        new_div.classList.add("dv")
+        new_img.classList.add("img")
+        new_btn.classList.add("button")
+
+        new_div.appendChild(new_img);
+        new_div.appendChild(new_btn);
+        all_container.appendChild(new_div);
+
+        new_btn.onclick = async function()
+        {
+        new_div.removeChild(new_img)
+
+        new_div.removeChild(new_btn);
+
+        new_div.remove(all_container)
+
+        console.log("id  ",new_img.id," hi")
         
-          hn1.id = 'hId1';
-          hn1.textContent = 'X-angles----';
-          new_div.appendChild(hn1);
-          // hn1.appendChild(new_div)
-          let br = document.createElement('p');   
-          // br.innerHTML = "<br/>";     
-          hn1.appendChild(br);
-          
-        
-          xst=false
-         }
-         else if(t>4&&yst){
-         
-          hn2.id = 'hId2';
-          hn2.textContent = 'Y-angles-----';
-          new_div.appendChild(hn2);
-          // hn2.appendChild(new_div)
-          let br = document.createElement('p');  
-          // br.innerHTML = "<br/>";      
-          
-         hn2.appendChild(br);
-        
-                 
-          yst=false
-         }
-          
-          
-      new_img.src = imgArray[t].src;
+        dlt(new_btn.id)  
 
-      new_img.classList.add("img");
-      new_btn.classList.add("btn");
-      
-      // new_div.appendChild(hn1);
-      // new_div.appendChild(hn2);
-
-          new_div.appendChild(new_img);
-          new_div.appendChild(new_btn);
-         
-          all_container.appendChild(new_div); 
-           
-          new_btn.onclick = async function(){
-
-      //console.log(" delted",new_img,'\n','t  ',t,imgArray[t],'v   ');
-     new_div.removeChild(new_img)
-     new_div.removeChild(new_btn);
-     new_div.remove(all_container)
-  //   console.log("id  ",new_img.id," hi")
-   
-      dlt(new_btn.id)  
-    }; 
-     
+        }; 
       }
-    
     }
-
+    
     function dlt(btn_id){
+      v=0
+    for(var t=1; t<imgArray.length ;t++,v++)
+    {  
+      console.log("Length:from dlt "+imgArray.length,t);
+      if(t == btn_id){continue;}
 
-     // new_im.src=new_img.src
-      for(var t=1; t<imgArray.length ;t++)
-      {  
-        console.log("Length:from dlt "+imgArray.length);
-       if(t == btn_id)
-          {
-          continue;
-             //console.log('god',t)
-           }
-          imgArray[v]=imgArray[t]
-          
-              }
-      imgArray.length-=1;
+      imgArray[v]=imgArray[t]
     }
-
-  function nextImage(){
-      var img = document.getElementById("mainImage");
-      console.log(imgArray.length)
-     
-              document.getElementById("mainImage").src = imgArray[ishow+1].src;
-        ishow++;
+    imgArray.length-=1;
   }
-  function previousImage(){
-      var img = document.getElementById("mainImage");
-      document.getElementById("mainImage").src = imgArray[ishow-1].src;
-        ishow--;
-  }
-
-
-  
-function downloadImage(){
-    // var a = document.createElement("a")
-    // document.body.appendChild(a);
-    
-   var folder=zip.folder("downloadme");
-    for(var i = 1; i < imgArray.length;i++){
-    //  document.body.appendChild(a);
-      // a.href= imgArray[i].src;
-      // a.download=`image(${i}).png`
-      folder.file(`image(${i}).png`,  dataURLtoFile(imgArray[i].src,`mymage(${i}).png`));
-     // a.click()
-     //zip.file(`mymage(${i}).png`, imgArray[i].src,{binary:true});
-      //document.body.removeChild(a);
-    }
-
-              
-              try {
-         zip.generateAsync({ type: 'blob' }).then(function (content) {
-          //a.click()
-          
-           saveAs(content, "folder");
-         //  FileSaver.saveAs(content, 'fileName.zip')
-       });
-
-        } catch (error) {
-        // TODO
+    function downloadImage(){
+      for(var i = 0; i < imgArray.length;i++)
+      {
+        zip.file(`mymage(${i}).png`, dataURLtoFile(imgArray[i].src,`myimage(${i}).png`), {binary:true});
+      }                
+      
+      try {
+            zip.generateAsync({ type: 'blob' }).then(function (content) {
+            saveAs(content, 'download.zip');});  
+          } 
+      catch (error) 
+      {
         throw new Error(error );
-        }
-
-
-
-}
-function dataURLtoFile(dataurl, filename) {
+      }
+  }
+  function dataURLtoFile(dataurl, filename) {
  
- var arr = dataurl.split(','),
-     mime = arr[0].match(/:(.*?);/)[1],
-     bstr = atob(arr[1]), 
-     n = bstr.length, 
-     u8arr = new Uint8Array(n);
-     
- while(n--){
-     u8arr[n] = bstr.charCodeAt(n);
- }
- 
- return new File([u8arr], filename, {type:mime});
-}
-  
-    
-
-
-
-
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+        
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+   }
     render();
   
   </script>
