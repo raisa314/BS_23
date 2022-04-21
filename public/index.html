@@ -2,14 +2,15 @@
 <html>
 
 <head>
-  <title></title>
+  <title>i'm running</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/100/three.js"></script>
   <script src="./threejs-loader/OBJLoader.js"></script>
   <script src="./threejs-loader/MTLLoader.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.9.1/jszip.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js" ></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
   <style type="text/css">
     .container{
       background-color: grey;
@@ -59,7 +60,8 @@
       margin-left: 75px;
   }
 </style>
-
+<!-- <div id="qrcode"></div> -->
+<svg id="barcode"></svg>
 </head>
 
 <body>
@@ -72,6 +74,18 @@
 
     let cube;
     const scene = new THREE.Scene();
+   
+// new QRCode(document.getElementById("qrcode"), "http://jindo.dev.naver.com/collie");
+
+//     var qrcode = new QRCode("qrcode", {
+//     text: "http://jindo.dev.naver.com/collie",
+//     width: 128,
+//     height: 128,
+//     colorDark : "#000000",
+//     colorLight : "#ffffff",
+//     correctLevel : QRCode.CorrectLevel.H
+// });
+
 
     const light = new THREE.DirectionalLight('#ffffff', 0.9);
     light.position.set(-20, 0, 100);
@@ -80,6 +94,17 @@
     const camera = new THREE.PerspectiveCamera(75,
       window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 5;
+
+// var cuboidTexture = new THREE.Texture( qrcode );
+// cuboidTexture.needsUpdate = true;
+// var material = new THREE.MeshBasicMaterial( { map: cuboidTexture } );
+
+// mesh = new THREE.Mesh( geometry, material );  
+// scene.add( mesh );
+// document.getElementById('qrcode').appendChild(renderer.domElement)
+
+
+JsBarcode("#barcode", "Hi!");
 
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth/2.5, window.innerHeight);
@@ -91,6 +116,8 @@
     const mtlLoader = new THREE.MTLLoader();
     mtlLoader.setPath('./blender-files/');
 
+//     mesh = new THREE.Mesh( mtlLoader, material );  
+// scene.add( mesh );
     ///bg image
     var backgroundMesh = new THREE.Mesh(
             new THREE.PlaneGeometry(2, 2, 0),
