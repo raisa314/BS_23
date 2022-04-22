@@ -181,8 +181,13 @@ imageObj1.onload = function() {
 };
 var imgforl = new Image();
 
- var imglogo = canvas.toDataURL();
-      console.log("i am    ",imglogo)
+  var imglogo = canvas.toDataURL();
+
+ imglogo = imglogo.replace(" ", "+")
+// setTimeout(() => {
+  console.log("i am    ",imglogo)
+// }, 1000);
+// console.log("i am    ",imglogo)
 
 
 
@@ -190,6 +195,7 @@ var imgforb = new Image();
 
 var imgb = new Image();
 imgb=JsBarcode("#canvas1", "afw")
+console.log("i am    ",imgb)
 
 var imgbar = canvas1.toDataURL();
       console.log("i am    ",imgbar)
@@ -232,7 +238,7 @@ function loadURLToData(callback) {
 function render(preview,canvas_id){
     // rendering canvas
     let img_tags_text_wrong = preview.innerHTML.match(/<img.*?>/g); // inner html misses the end tag / of <img>
-    console.log("i am wrong   ",img_tags_text_wrong)
+    console.log("i am img_tags_text_wrong   ",img_tags_text_wrong)
     let fixed_html_structure = preview.innerHTML;
     img_tags_text_wrong.forEach(wrong_itm=>{
       let img_tag_text_right = wrong_itm.replace('>','/>');
@@ -251,32 +257,77 @@ function render(preview,canvas_id){
       type: 'image/svg+xml;base64'//harset=utf-8
     });
     let render_object_url = DOMURL.createObjectURL(render_svg_blob);
-     
-    render_img.onload = function() {
-        let product_face_canvas = document.getElementById(`product_face${canvas_id}`);
+    
+    let imdown=new Image();
+    // imdown.crossOrigin="anonymous"
+    let product_face_canvas = document.getElementById(`product_face${canvas_id}`);
         let product_face_context = product_face_canvas.getContext("2d");
+    
+        render_img.onload = function() {
+      
         product_face_context.drawImage(render_img, 0, 0);
-        DOMURL.revokeObjectURL(render_object_url);
-      }
-      saveAs(dataURLtoFile(fixed_html_structure,`image.png`), `image(${canvas_id}).png` )
 
-    render_img.src = render_object_url;
-  }
+   
+        // console.log(imdown.src)
+        
+      // downloadCanvasAsImage(canvas_id)
+     
+         DOMURL.revokeObjectURL(render_object_url);
+      }
+//       setTimeout(() => {
+//           imdown=product_face_canvas.toDataURL()
+//        saveAs(dataURLtoFile(imdown,`image.png`), `image(${canvas_id}).png` )
+ console.log(render_img)
+ console.log(render_object_url)
+//   // console.log("i am    ",imdown)
+// }, 5000);
+      // downloadCanvasAsImage(canvas_id)
+     
+      // let imcanvas=`product_face${canvas_id}`
+      //  imdown=product_face_canvas.toDataURL()
+      // console.log(imdown)
+      //  saveAs(dataURLtoFile(imdown,`image.png`), `image(${canvas_id}).png` )
+      //  saveAs(render_img.src, `image(${canvas_id}).png` )
+
+render_img.src = render_object_url;
+}
+
+// function downloadCanvasAsImage(canvas_id){
+
+// let canvasImage = document.getElementById(`preview${canvas_id}`).toDataURL('image/png');
+
+// // this can be used to download any image from webpage to local disk
+// let xhr = new XMLHttpRequest();
+// xhr.responseType = 'blob';
+// xhr.onload = function () {
+//     let a = document.createElement('a');
+//     a.href = window.URL.createObjectURL(xhr.response);
+//     a.download = 'image_name.png';
+//     a.style.display = 'none';
+//     document.body.appendChild(a);
+//     a.click();
+//     a.remove();
+//   };
+//   xhr.open('GET', canvasImage); // This is to download the canvas Image
+//   xhr.send();
+// }
+
+function dataURLtoFile(dataurl, filename) {
+
+var arr = dataurl.split(','),
+ mime = arr[0].match(/:(.*?);/)[1],
+ bstr = atob(arr[1]), 
+ n = bstr.length, 
+ u8arr = new Uint8Array(n);
+ 
+while(n--){
+ u8arr[n] = bstr.charCodeAt(n);
+}
+return new File([u8arr], filename, {type:mime});
+}
 
   
-  function dataURLtoFile(dataurl, filename) {
- 
- var arr = dataurl.split(','),
-     mime = arr[0].match(/:(.*?);/)[1],
-     bstr = atob(arr[1]), 
-     n = bstr.length, 
-     u8arr = new Uint8Array(n);
-     
- while(n--){
-     u8arr[n] = bstr.charCodeAt(n);
- }
- return new File([u8arr], filename, {type:mime});
-}
+
  
   let product_name_section=[], brand_name_section=[], barcode=[],logo=[], preview =[], description_section=[]
 
